@@ -45,7 +45,7 @@ def admin():
  for r in rows:
   d=json.loads(r['answers']);details=''.join('<dt>'+str(escape(k))+'</dt><dd>'+str(escape(v))+'</dd>' for k,v in d.items())
   status='Betalt (manuelt bekræftet)' if r['paid'] else 'Ikke bekræftet betalt'
-  cards.append(f'''<article><details><summary>#{r['id']} · {escape(r['nickname'])} · {escape(r['game'])} · {status}</summary><p class="tag">Modtaget: {escape(r['created_at'])}</p><dl>{details}</dl><form action="/admin/paid/{r['id']}" method="post"><button>{'Fjern betalingsmarkering' if r['paid'] else 'Markér betaling som kontrolleret'}</button></form></details></article>''')
+  cards.append(f'''<article><details><summary>#{r['id']} · {escape(r['nickname'])} · {escape(r['game'])} · {status}</summary><p class="tag">Modtaget: {escape(r['created_at'])}</p><dl>{details}</dl><form action="/admin/paid/{r['id']}" method="post"><button>{'Fjern betalingsmarkering' if r['paid'] else 'Markér betaling som kontrolleret'}</button></form><form action="/admin/delete/{r['id']}" method="post" onsubmit="return confirm('Er du sikker på, at du vil slette denne ansøgning permanent?');"><button type="submit" style="background:#7f1d1d;border-color:#ef4444">Slet ansøgning</button></form></details></article>''')
  return STYLE+f'''<h1>Frostline · Ledelsespanel</h1><h2>Ansøgninger: {len(rows)}</h2><p>Betaling bekræftes kun manuelt efter kontrol af MobilePay Box 8620JJ. Første måned er gratis.</p><p><a href="/">Hjemmeside</a> · <a href="/logout">Log ud</a></p>'''+''.join(cards)
 @app.post('/admin/paid/<int:rid>')
 @auth
